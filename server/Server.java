@@ -22,7 +22,7 @@ public class Server
 				 * now listen for connections
 				 * and service the connection in a separate thread.
 				 */
-				Runnable task = new Connection(sock.accept());
+				Runnable task = new Connection(server.accept());
 				exec.execute(task);
 			}
 		}
