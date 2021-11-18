@@ -15,7 +15,7 @@ public class Server
 		
 		try {
 			// establish the socket
-			server = new ServerSocket(PORT);
+			server = new ServerSocket("localhost",PORT);
 			
 			while (true) {
 				/**

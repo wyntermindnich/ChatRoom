@@ -33,7 +33,7 @@ public class MessageHandler {
 	}
 
 	public Message getMessage() {
-		final int controlCode = this.buffer.get(this.byteOffset);
+		final int controlCode = Byte.toUnsignedInt(this.buffer.get(this.byteOffset));
 		this.byteOffset++;
 		final int payloadQuantity = this.buffer.getInt(this.byteOffset);
 		this.byteOffset += 4;

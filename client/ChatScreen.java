@@ -1,19 +1,10 @@
-/**
- * This program is a rudimentary demonstration of Swing GUI programming.
- * Note, the default layout manager for JFrames is the border layout. This
- * enables us to position containers using the coordinates South and Center.
- *
- * Usage:
- *	java ChatScreen
- *
- * When the user enters text in the textfield, it is displayed backwards 
- * in the display area.
- */
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.io.*;
+import java.net.*;
+
 
 public class ChatScreen extends JFrame implements ActionListener, KeyListener
 {
@@ -21,7 +12,10 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 	private JButton exitButton;
 	private JTextField sendText;
 	private JTextArea displayArea;
-        
+
+	BufferedReader fromServer = null;
+	Socket server = null;
+
 	public ChatScreen() {
 		/**
 		 * a panel used for placing components
@@ -42,7 +36,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		/**
 		 * register the listeners for the different button clicks
 		 */
-        sendText.addKeyListener(this);
+		sendText.addKeyListener(this);
 		sendButton.addActionListener(this);
 		exitButton.addActionListener(this);
 
@@ -75,7 +69,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		 */
 		setTitle("GUI Demo");
 		pack();
- 
+
 		setVisible(true);
 		sendText.requestFocus();
 
@@ -87,29 +81,36 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		} );
 
 	}
-        
-        /**
-         * This gets the text the user entered and outputs it
-         * in the display area.
-         */
-        public void displayText() {
-            String message = sendText.getText().trim();
-            StringBuffer buffer = new StringBuffer(message.length());
 
-            // now reverse it
-            for (int i = message.length()-1; i >= 0; i--)
-                buffer.append(message.charAt(i));
+	/**
+	 * Displays a message
+	 */
+	public void displayMessage(String message) {
+		displayArea.append(message + "\n");
+	}
 
-            displayArea.append(buffer.toString() + "\n");
+	/**
+	 * This gets the text the user entered and outputs it
+	 * in the display area.
+	 */
+	public void displayText() {
+		String message = sendText.getText().trim();
+		StringBuffer buffer = new StringBuffer(message.length());
 
-            sendText.setText("");
-            sendText.requestFocus();
-        }
+		// now reverse it
+		for (int i = message.length()-1; i >= 0; i--)
+			buffer.append(message.charAt(i));
+
+		displayArea.append(buffer.toString() + "\n");
+
+		sendText.setText("");
+		sendText.requestFocus();
+	}
 
 
 	/**
 	 * This method responds to action events .... i.e. button clicks
-         * and fulfills the contract of the ActionListener interface.
+	 * and fulfills the contract of the ActionListener interface.
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		Object source = evt.getSource();
@@ -119,29 +120,45 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		else if (source == exitButton)
 			System.exit(0);
 	}
-        
-        /**
-         * These methods responds to keystroke events and fulfills
-         * the contract of the KeyListener interface.
-         */
-        
-        /**
-         * This is invoked when the user presses
-         * the ENTER key.
-         */
-        public void keyPressed(KeyEvent e) { 
-            if (e.getKeyCode() == KeyEvent.VK_ENTER)
-                displayText();
-        }
-        
-        /** Not implemented */
-        public void keyReleased(KeyEvent e) { }
-         
-        /** Not implemented */
-        public void keyTyped(KeyEvent e) {  }
-        
+
+	/**
+	 * These methods responds to keystroke events and fulfills
+	 * the contract of the KeyListener interface.
+	 */
+
+	/**
+	 * This is invoked when the user presses
+	 * the ENTER key.
+	 */
+	public void keyPressed(KeyEvent e) { 
+		if (e.getKeyCode() == KeyEvent.VK_ENTER)
+			displayText();
+	}
+
+	/** Not implemented */
+	public void keyReleased(KeyEvent e) { }
+
+	/** Not implemented */
+	public void keyTyped(KeyEvent e) {  }
+
 
 	public static void main(String[] args) {
-		JFrame win = new ChatScreen();
+		try {
+			Socket annoying = new Socket(args[0], 4200);
+			ChatScreen win = new ChatScreen();
+			win.displayMessage("My name is " + args[1]);
+
+			Thread ReaderThread = new Thread(new ReaderThread(annoying, win));
+
+			ReaderThread.start();
+
+			BufferedOutputStream toServer =  new BufferedOutputStream(annoying.getOutputStream());
+				String join = "1106Wynter";
+				byte[] = join.getBytes();
+			
+		}
+		catch (UnknownHostException uhe) { System.out.println(uhe); }
+		catch (IOException ioe) { System.out.println(ioe); }
+
 	}
 }

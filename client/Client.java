@@ -22,7 +22,7 @@ public class Client
 
 			//write args[1] to socket
 			toServer = new DataOutputStream(server.getOutputStream());
-			toServer.writeBytes(args[1].toString() + "\r\n");
+			toServer.writeBytes(args[0].toString() + "\r\n");
 			
 			// "Readers" are used for reading text characters
 			fromServer = new BufferedReader(new InputStreamReader(server.getInputStream()));
