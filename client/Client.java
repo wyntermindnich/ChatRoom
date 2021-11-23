@@ -14,13 +14,12 @@ public class Client
 		BufferedReader fromServer = null;
 		Socket server = null;
 		DataOutputStream toServer= null;
-	
-		
+			
 		try {
 			// create socket and connect to default port 
 			server = new Socket(args[0], PORT);
 
-			//write args[1] to socket
+			//write args[0] to socket
 			toServer = new DataOutputStream(server.getOutputStream());
 			toServer.writeBytes(args[0].toString() + "\r\n");
 			

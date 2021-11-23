@@ -1,5 +1,3 @@
-package pro.teddybear.chatroom;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;

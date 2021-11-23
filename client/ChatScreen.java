@@ -146,6 +146,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		try {
 			Socket annoying = new Socket(args[0], 4200);
 			ChatScreen win = new ChatScreen();
+			int payload = 0;
 			win.displayMessage("My name is " + args[1]);
 
 			Thread ReaderThread = new Thread(new ReaderThread(annoying, win));
@@ -153,8 +154,9 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 			ReaderThread.start();
 
 			BufferedOutputStream toServer =  new BufferedOutputStream(annoying.getOutputStream());
-				String join = "1106Wynter";
-				byte[] = join.getBytes();
+			String join = "1106Wynter";
+			byte[] = join.wtriteBytes(actionPerformed(join));
+			payload = count.displayMessage()
 			
 		}
 		catch (UnknownHostException uhe) { System.out.println(uhe); }

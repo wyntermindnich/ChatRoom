@@ -1,5 +1,3 @@
-package pro.teddybear.chatroom;
-
 import java.nio.ByteBuffer;
 
 public class MessageHandler {
