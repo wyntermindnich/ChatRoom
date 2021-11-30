@@ -33,6 +33,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		//writing the join information to the server
 		String joining = "1" + delimeter + "1"  + delimeter + "0" + delimeter + args.length() + delimeter + args + "\n";
 		byte[] message = joining.getBytes();
+
 			output.write(message);
 		output.flush();
 		
@@ -94,7 +95,12 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 
 		/** anonymous inner class to handle window closing events */
 		addWindowListener(new WindowAdapter() {
+			String exiting = "2" + delimeter + "1"  + delimeter + "0" + delimeter + args.length() + delimeter + args + "\n";
+			byte[] ExitMessage = exiting.getBytes();
+		
 			public void windowClosing(WindowEvent evt) {
+				output.write(ExitMessage);
+				output.flush();
 				System.exit(0);
 			}
 		} );
@@ -131,13 +137,17 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 	 * This method responds to action events .... i.e. button clicks
 	 * and fulfills the contract of the ActionListener interface.
 	 */
+
 	public void actionPerformed(ActionEvent evt) {
 		Object source = evt.getSource();
+		String exiting = "2" + delimeter + "1"  + delimeter + "0" + delimeter + args.length() + delimeter + args + "\n";
+		byte[] ExitMessage = exiting.getBytes();
 
 		if (source == sendButton) 
 			displayText();
 		else if (source == exitButton)
-			
+			output.write(ExitMessage);
+			output.flush();
 			System.exit(0);
 	}
 
