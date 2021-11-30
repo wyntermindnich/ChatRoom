@@ -1,3 +1,15 @@
+/**
+ * This program is a rudimentary demonstration of Swing GUI programming.
+ * Note, the default layout manager for JFrames is the border layout. This
+ * enables us to position containers using the coordinates South and Center.
+ *
+ * Usage:
+ *	java ChatScreen
+ *
+ * When the user enters text in the textfield, it is displayed backwards 
+ * in the display area.
+ */
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,11 +24,18 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 	private JButton exitButton;
 	private JTextField sendText;
 	private JTextArea displayArea;
+	public static final String delimeter = "%@&";
+	BufferedOutputStream output;
 
-	BufferedReader fromServer = null;
-	Socket server = null;
-
-	public ChatScreen() {
+	public ChatScreen(Socket socket, String args) throws IOException {
+		
+		output = new BufferedOutputStream(socket.getOutputStream());
+		//writing the join information to the server
+		String joining = "1" + delimeter + "1"  + delimeter + "0" + delimeter + args.length() + delimeter + args + "\n";
+		byte[] message = joining.getBytes();
+			output.write(message);
+		output.flush();
+		
 		/**
 		 * a panel used for placing components
 		 */
@@ -118,6 +137,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 		if (source == sendButton) 
 			displayText();
 		else if (source == exitButton)
+			
 			System.exit(0);
 	}
 
@@ -145,22 +165,18 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 	public static void main(String[] args) {
 		try {
 			Socket annoying = new Socket(args[0], 4200);
-			ChatScreen win = new ChatScreen();
-			int payload = 0;
+			ChatScreen win = new ChatScreen(annoying,args[1]);
 			win.displayMessage("My name is " + args[1]);
 
 			Thread ReaderThread = new Thread(new ReaderThread(annoying, win));
 
 			ReaderThread.start();
-
-			BufferedOutputStream toServer =  new BufferedOutputStream(annoying.getOutputStream());
-			String join = "1106Wynter";
-			byte[] = join.wtriteBytes(actionPerformed(join));
-			payload = count.displayMessage()
 			
 		}
 		catch (UnknownHostException uhe) { System.out.println(uhe); }
 		catch (IOException ioe) { System.out.println(ioe); }
 
+
 	}
 }
+

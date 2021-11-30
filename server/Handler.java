@@ -4,61 +4,39 @@
  *
  * @author Greg Gagne 
  */
-
+//Edited by Eden Dronoff to write a multithreaded name service client-server application
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
-public class Handler 
-{
-	public static final int BUFFER_SIZE = 256;
+import javax.swing.JFrame;
+
+public class Handler{
 	
 	/**
 	 * this method is invoked by a separate thread
 	 */
-	public void process(Socket client) throws java.io.IOException {
-		byte[] buffer = new byte[BUFFER_SIZE];
-		BufferedReader fromClient = null;
-		DataOutputStream toClient = null;
-		InetAddress hostAddress;
-		String line;
+	
+	public void process(Socket client, ArrayList socketList, ArrayList nameList, ArrayList idList) throws java.io.IOException {
+		//creates the input and output streams to talk to the client
+		BufferedReader fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		
-		try {
-			// read from socket, same as reding from client
-			// look up ip DNS
-			// write ip to socket, bufferend, same as writing client
-
-			 //get the input and output streams associated with the socket.
-			toClient = new DataOutputStream(client.getOutputStream());
-			int numBytes;
+		//puts the client socket into the array list
+		socketList.add(client);
+			for(int i = 0; i < socketList.size(); i++) {
+				System.out.println(socketList.get(i));
+			}
 			
-			//reads from client
-			fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			
-			line = fromClient.readLine();
-			// line = ip name
-			System.out.println(line);
-
-			//take address from client? 
-			hostAddress = InetAddress.getByName(line);
-			System.out.println(hostAddress.getHostAddress());
-
-			//write IP to socket
-			toClient.writeBytes(hostAddress.toString() + "\r\n");
-
-
-   		}
-		catch (IOException ioe) {
-			//write this to socket 
-			toClient.writeBytes(ioe.toString() + "\r\n");
-			System.err.println(ioe);
-		}
-
-		finally {
-			// close streams and socket
-			if (fromClient != null)
-				fromClient.close();
-			if (toClient != null)
-				toClient.close();
-		}
+		//reads the user input for their username
+		Message message =  Message.constructMessage(fromClient.readLine());
+		Payload[] messagePayload = message.getPayload();
+		 for (Payload payload : messagePayload) {
+			 nameList.add(payload.getMessage());
+			 idList.add(payload.getUserId());
+			for(int i = 0; i < nameList.size(); i++) {
+				System.out.println(nameList.get(i));
+				System.out.println(idList.get(i));
+			} 
+	} 
 	}
 }
