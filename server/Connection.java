@@ -16,12 +16,14 @@ public class Connection implements Runnable
 	ArrayList socketList;
 	ArrayList nameList;
 	ArrayList idList;
+	int ids;
 	
-	public Connection(Socket client, ArrayList socketList, ArrayList nameList, ArrayList idList) {
+	public Connection(Socket client, ArrayList socketList, ArrayList nameList, ArrayList idList, int ids) {
 		this.client = client;
 		this.socketList =  socketList;
 		this.nameList = nameList;
 		this.idList = idList;
+		this.ids = ids;
 	}
 
     /**
@@ -29,11 +31,13 @@ public class Connection implements Runnable
      */	
 	public void run() { 
 		try {
-			handler.process(client,socketList,nameList,idList);
+			handler.process(client,socketList,nameList,idList,ids);
 		}
 		catch (java.io.IOException ioe) {
 			System.err.println(ioe);
 		}
 	}
 }
+
+
 

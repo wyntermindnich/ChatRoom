@@ -9,6 +9,7 @@ public class Server {
 	static ArrayList socketList  = new ArrayList();
 	static ArrayList nameList  = new ArrayList();
 	static ArrayList idList  = new ArrayList();
+	static int ids = 1;
 	
 	public static final int PORT = 4200;
     // construct a thread pool for concurrency	
@@ -29,7 +30,8 @@ public class Server {
 				 * now listen for connections
 				 * and service the connection in a separate thread.
 				 */
-				Runnable task = new Connection(client,socketList,nameList,idList);
+				ids++;
+				Runnable task = new Connection(client,socketList,nameList,idList,ids);
 				exec.execute(task);
 			}
 		}
@@ -44,3 +46,5 @@ public class Server {
 
 	}
 }
+
+
